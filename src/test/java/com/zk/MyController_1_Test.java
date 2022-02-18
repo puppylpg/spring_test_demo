@@ -32,10 +32,17 @@ public class MyController_1_Test {
 
 	private MockMvc mvc;
 
+	/**
+	 * mock一个对象
+	 */
 	@Mock
 	// 要 Mock 的类
 	UserService  userService;
 
+	/**
+	 * 优先使用constructor injection，如果找不到mock的对象用于注入，直接注入null
+	 * 如果想注入真实的对象，需要自己手动组装，而不是用mockito注入
+	 */
 	@InjectMocks
 	// Mock 要注入的类
 			UserController userController;

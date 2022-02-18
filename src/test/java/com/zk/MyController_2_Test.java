@@ -14,11 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 @RunWith(SpringRunner.class)
+// 完全加载spring boot context，启动server
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 public class MyController_2_Test {
 
 
+	// 因为启动了完整的spring boot，所以不需要注入MockMvc了，直接使用这个rest client就行了
 
 	// 要注意, 不要用 RestTemplate,
 	// 因为 TestRestTemplate 在测试环境里多做了很多事,

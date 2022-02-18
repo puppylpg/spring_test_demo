@@ -24,6 +24,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 使用mockmvc就意味着不启动server！！！
+// to enable and configure auto-configuration of MockMvc
+// 既用了spring，又手动操作MockMvc
+// 不启用server，只测试其下的layer，几乎所有的spring组件都会被加载，就差启动server的开销了
 @AutoConfigureMockMvc
 public class MyController_3_Test {
 
@@ -31,7 +35,9 @@ public class MyController_3_Test {
 	MockMvc mvc;
 
 
-
+	/**
+	 * 用mock bean而不是test1中的mock，为了能注入spring
+	 */
 	@MockBean
 	UserService userService;
 
@@ -41,9 +47,9 @@ public class MyController_3_Test {
 	@Test
 	public void getUser() throws Exception {
 		// given
-		User bob = new User().setName("bob").setId(3);
+		User lily = new User().setName("lily").setId(1);
 		given(userService.getUser(1))
-				.willReturn(bob);
+				.willReturn(lily);
 
 
 		// when
@@ -55,7 +61,7 @@ public class MyController_3_Test {
 		// then
 		ObjectMapper objectMapper = new ObjectMapper();
 		Assert.assertEquals(response.getStatus(), HttpStatus.OK.value());
-		Assert.assertEquals(response.getContentAsString(), objectMapper.writeValueAsString(bob));
+		Assert.assertEquals(response.getContentAsString(), objectMapper.writeValueAsString(lily));
 	}
 
 	@Test
@@ -66,6 +72,7 @@ public class MyController_3_Test {
 
 		// when
 		MockHttpServletResponse response = mvc.perform(
+				// get几都是exception，因为user service是mock的，没有注入实际的user repo
 				get("/users/1")
 						.accept(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();
